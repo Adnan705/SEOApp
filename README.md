@@ -9,7 +9,7 @@ A Streamlit app to analyze SEO discussions across Reddit communities.
 - Modern UI with dark/light mode
 
 ## Deployment
-![Open in Streamlit](https://seoanswers.streamlit.app/)
+https://seoanswers.streamlit.app/
 
 ## Setup
 ```bash
