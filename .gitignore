@@ -1,0 +1,25 @@
+# Python
+__pycache__/
+*.py[cod]
+*.env
+*.venv
+venv/
+env/
+
+# Database
+*.db
+*.db-journal
+
+# IDE
+.vscode/
+.idea/
+
+# Streamlit
+secrets.toml
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
