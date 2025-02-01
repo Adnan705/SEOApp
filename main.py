@@ -6,6 +6,9 @@ from datetime import datetime
 from markdown import markdown
 from concurrent.futures import ThreadPoolExecutor
 import prawcore
+import sys
+__import__('pysqlite3')
+sys.modules['sqlite3'] = sys.modules.pop('pysqlite3')
 
 # ======== API CONFIGURATION ======== #
 REDDIT_CREDENTIALS = {
@@ -30,7 +33,7 @@ except Exception as e:
 def init_db():
     """Initialize database with proper FTS table"""
     try:
-        conn = sqlite3.connect('seo_reddit.db')
+        conn = sqlite3.connect('seo_reddit.db', check_same_thread=False)
         c = conn.cursor()
         
         # Main posts table
@@ -93,7 +96,7 @@ POST_LIMIT = 50
 def fetch_subreddit_posts(subreddit):
     """Fetch and store posts for a subreddit"""
     try:
-        conn = sqlite3.connect('seo_reddit.db')
+        conn = sqlite3.connect('seo_reddit.db', check_same_thread=False)
         c = conn.cursor()
         
         for post in reddit.subreddit(subreddit).new(limit=POST_LIMIT):
@@ -124,7 +127,7 @@ def fetch_all_posts():
 def search_posts(query):
     """Search posts using FTS"""
     try:
-        conn = sqlite3.connect('seo_reddit.db')
+        conn = sqlite3.connect('seo_reddit.db', check_same_thread=False)
         c = conn.cursor()
         
         # Verify FTS table exists
@@ -315,7 +318,7 @@ with st.sidebar:
     
     if st.button("🔧 Rebuild Search Index"):
         try:
-            conn = sqlite3.connect('seo_reddit.db')
+            conn = sqlite3.connect('seo_reddit.db', check_same_thread=False)
             c = conn.cursor()
             c.execute('INSERT INTO posts_fts(posts_fts) VALUES("rebuild")')
             conn.commit()
@@ -343,7 +346,7 @@ if not os.path.exists('seo_reddit.db'):
     fetch_all_posts()
 else:
     # Check for FTS table
-    conn = sqlite3.connect('seo_reddit.db')
+    conn = sqlite3.connect('seo_reddit.db', check_same_thread=False)
     c = conn.cursor()
     c.execute("SELECT name FROM sqlite_master WHERE type='table' AND name='posts_fts'")
     if not c.fetchone():
